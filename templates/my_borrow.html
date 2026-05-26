@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}我的借阅{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header bg-info text-white"><h4>我的借阅记录</h4></div>
+    <div class="card-body">
+        <table class="table">
+            <thead><tr><th>书名</th><th>借阅日期</th><th>应还日期</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+                {% for rec in records %}
+                <tr>
+                    <td>{{ rec.book.title }}</td>
+                    <td>{{ rec.borrow_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ rec.due_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{% if rec.status=='borrowed' %}借阅中{% else %}已归还{% endif %}</td>
+                    <td>
+                        {% if rec.status=='borrowed' %}
+                            <a href="{{ url_for('return_book', record_id=rec.id) }}" class="btn btn-sm btn-success">归还</a>
+                            <a href="{{ url_for('renew_book', record_id=rec.id) }}" class="btn btn-sm btn-secondary">续借</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

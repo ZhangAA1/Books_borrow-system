@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0">{{ title }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">{{ form.title.label(class="form-label") }}{{ form.title(class="form-control") }}</div>
+                    <div class="mb-3">{{ form.author.label(class="form-label") }}{{ form.author(class="form-control") }}</div>
+                    <div class="mb-3">{{ form.isbn.label(class="form-label") }}{{ form.isbn(class="form-control") }}</div>
+                    <div class="mb-3">{{ form.publisher.label(class="form-label") }}{{ form.publisher(class="form-control") }}</div>
+                    <div class="mb-3">{{ form.price.label(class="form-label") }}{{ form.price(class="form-control") }}</div>
+                    <div class="mb-3">{{ form.total_copies.label(class="form-label") }}{{ form.total_copies(class="form-control") }}</div>
+                    <div class="mb-3">{{ form.available_copies.label(class="form-label") }}{{ form.available_copies(class="form-control") }}</div>
+                    <div class="mb-3">{{ form.category_id.label(class="form-label") }}{{ form.category_id(class="form-select") }}</div>
+                    <div class="d-grid">{{ form.submit(class="btn btn-primary") }}</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

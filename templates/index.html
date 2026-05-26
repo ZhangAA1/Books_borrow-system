@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}首页 - 图书借阅管理系统{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <div class="card mt-5">
+            <div class="card-body">
+                <h1 class="display-4"><i class="fas fa-book-open text-primary"></i> 欢迎来到图书借阅管理系统</h1>
+                <p class="lead">高效管理图书、读者和借阅流程，为图书馆提供一站式解决方案。</p>
+                <hr class="my-4">
+                <p>系统支持图书检索、借阅、续借、归还以及用户管理等功能。</p>
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">开始借阅</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-secondary btn-lg">注册新账号</a>
+                {% else %}
+                    <a href="{{ url_for('books') }}" class="btn btn-primary btn-lg">检索图书</a>
+                    {% if not current_user.is_admin() %}
+                        <a href="{{ url_for('my_borrow') }}" class="btn btn-success btn-lg">我的借阅</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
