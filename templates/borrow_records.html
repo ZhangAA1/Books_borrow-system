@@ -2,92 +2,29 @@
 {% block title %}借阅记录管理{% endblock %}
 {% block content %}
 <div class="card">
-    <div class="card-header bg-primary text-white">
-        <h4 class="mb-0"><i class="fas fa-list"></i> 全部借阅记录</h4>
-    </div>
+    <div class="card-header bg-primary text-white"><h4 class="mb-0"><i class="fas fa-list"></i> 全部借阅记录</h4></div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>读者姓名</th>
-                        <th>书名</th>
-                        <th>借阅日期</th>
-                        <th>应还日期</th>
-                        <th>实际归还日</th>
-                        <th>状态</th>
-                        <th>续借次数</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for record in records %}
-                    <tr>
-                        <td>{{ record.id }}</td>
-                        <td>{{ record.user.real_name }} ({{ record.user.library_card }})</td>
-                        <td>{{ record.book.title }}</td>
-                        <td>{{ record.borrow_date.strftime('%Y-%m-%d') }}</td>
-                        <td class="{% if record.is_overdue() %}text-danger fw-bold{% endif %}">
-                            {{ record.due_date.strftime('%Y-%m-%d') }}
-                            {% if record.is_overdue() %}<span class="badge bg-danger">逾期</span>{% endif %}
-                        </td>
-                        <td>{{ record.return_date.strftime('%Y-%m-%d') if record.return_date else '未归还' }}</td>
-                        <td>
-                            {% if record.status == 'borrowed' %}
-                                <span class="badge bg-warning">借阅中</span>
-                            {% else %}
-                                <span class="badge bg-secondary">已归还</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ record.renew_count }}</td>
-                        <td>
-                            {% if record.status == 'borrowed' %}
-                                <a href="{{ url_for('return_book', record_id=record.id) }}" class="btn btn-sm btn-success" onclick="return confirm('确认归还？')">强制归还</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="9" class="text-center">暂无借阅记录</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 分页导航 -->
-        {% if pagination.pages > 1 %}
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if pagination.has_prev %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for('borrow_records', page=pagination.prev_num) }}">上一页</a>
-                </li>
+        <table class="table table-bordered">
+            <thead><tr><th>ID</th><th>读者姓名</th><th>书名</th><th>借阅日期</th><th>应还日期</th><th>实际归还日</th><th>状态</th><th>续借次数</th><th>操作</th></tr></thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.id }}</td>
+                    <td>{{ record.user.real_name }} ({{ record.user.library_card }})</td>
+                    <td>{{ record.book.title }}</td>
+                    <td>{{ record.borrow_date.strftime('%Y-%m-%d') }}</td>
+                    <td class="{% if record.is_overdue() %}text-danger{% endif %}">{{ record.due_date.strftime('%Y-%m-%d') }}{% if record.is_overdue() %} <span class="badge bg-danger">逾期</span>{% endif %}</td>
+                    <td>{{ record.return_date.strftime('%Y-%m-%d') if record.return_date else '未归还' }}</td>
+                    <td>{% if record.status == 'borrowed' %}<span class="badge bg-warning">借阅中</span>{% else %}<span class="badge bg-secondary">已归还</span>{% endif %}</td>
+                    <td>{{ record.renew_count }}</td>
+                    <td>{% if record.status == 'borrowed' %}<a href="{{ url_for('return_book', record_id=record.id) }}" class="btn btn-sm btn-success" onclick="return confirm('确认归还？')">强制归还</a>{% endif %}</td>
+                </tr>
                 {% else %}
-                <li class="page-item disabled"><span class="page-link">上一页</span></li>
-                {% endif %}
-
-                {% for p in pagination.iter_pages() %}
-                    {% if p %}
-                        <li class="page-item {% if p == pagination.page %}active{% endif %}">
-                            <a class="page-link" href="{{ url_for('borrow_records', page=p) }}">{{ p }}</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled"><span class="page-link">…</span></li>
-                    {% endif %}
+                <tr><td colspan="9" class="text-center">暂无借阅记录</td></tr>
                 {% endfor %}
-
-                {% if pagination.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for('borrow_records', page=pagination.next_num) }}">下一页</a>
-                </li>
-                {% else %}
-                <li class="page-item disabled"><span class="page-link">下一页</span></li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
+            </tbody>
+        </table>
+        {% if pagination.pages > 1 %}<nav><ul class="pagination">...</ul></nav>{% endif %}
     </div>
 </div>
 {% endblock %}

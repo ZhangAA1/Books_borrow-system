@@ -1,8 +1,6 @@
-# add_books.py - 批量添加示例图书
 from app import app, db
 from models import Book, Category
 
-# 准备要添加的图书数据
 books_data = [
     {"title": "三体", "author": "刘慈欣", "isbn": "9787229030931", "publisher": "重庆出版社", "price": 32.0, "total_copies": 5, "category": "文学"},
     {"title": "三体II：黑暗森林", "author": "刘慈欣", "isbn": "9787229030948", "publisher": "重庆出版社", "price": 39.0, "total_copies": 5, "category": "文学"},
@@ -22,11 +20,9 @@ books_data = [
 
 def add_books():
     with app.app_context():
-        # 获取类别名称到对象的映射
         category_map = {cat.name: cat for cat in Category.query.all()}
         added_count = 0
         for book_info in books_data:
-            # 检查是否已存在（通过ISBN）
             existing = Book.query.filter_by(isbn=book_info["isbn"]).first()
             if existing:
                 print(f"图书《{book_info['title']}》已存在，跳过")
@@ -42,7 +38,7 @@ def add_books():
                 publisher=book_info["publisher"],
                 price=book_info["price"],
                 total_copies=book_info["total_copies"],
-                available_copies=book_info["total_copies"],  # 初始可借数等于总册数
+                available_copies=book_info["total_copies"],
                 category_id=category.id
             )
             db.session.add(book)

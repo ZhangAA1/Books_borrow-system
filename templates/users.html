@@ -8,26 +8,21 @@
     </div>
     <div class="card-body">
         <table class="table table-bordered">
-            <thead>
-                <tr><th>用户名</th><th>真实姓名</th><th>邮箱</th><th>借阅证号</th><th>角色</th><th>操作</th></tr>
-            </thead>
+            <thead><tr><th>用户名</th><th>真实姓名</th><th>邮箱</th><th>借阅证号</th><th>角色</th><th>操作</th></tr></thead>
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <td>{{ user.username }}</td><td>{{ user.real_name }}</td><td>{{ user.email }}</td>
-                    <td>{{ user.library_card }}</td><td>{{ '管理员' if user.is_admin() else '普通用户' }}</td>
-                    <td>
-                        <a href="{{ url_for('edit_user', id=user.id) }}" class="btn btn-sm btn-warning">编辑</a>
-                        <a href="{{ url_for('delete_user', id=user.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('确定删除？')">删除</a>
-                    </td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.real_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.library_card }}</td>
+                    <td>{{ '管理员' if user.is_admin() else '普通用户' }}</td>
+                    <td><a href="{{ url_for('edit_user', id=user.id) }}" class="btn btn-sm btn-warning">编辑</a><a href="{{ url_for('delete_user', id=user.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('确定删除？')">删除</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <!-- 分页代码参考books.html -->
-        {% if pagination.pages > 1 %}
-        <nav><ul class="pagination">...</ul></nav>
-        {% endif %}
+        {% if pagination.pages > 1 %}<nav><ul class="pagination">...</ul></nav>{% endif %}
     </div>
 </div>
 {% endblock %}

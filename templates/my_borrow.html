@@ -2,24 +2,28 @@
 {% block title %}我的借阅{% endblock %}
 {% block content %}
 <div class="card">
-    <div class="card-header bg-info text-white"><h4>我的借阅记录</h4></div>
+    <div class="card-header bg-info text-white"><h4 class="mb-0"><i class="fas fa-book-open"></i> 我的借阅记录</h4></div>
     <div class="card-body">
         <table class="table">
-            <thead><tr><th>书名</th><th>借阅日期</th><th>应还日期</th><th>状态</th><th>操作</th></tr></thead>
+            <thead><tr><th>书名</th><th>作者</th><th>借阅日期</th><th>应还日期</th><th>状态</th><th>续借次数</th><th>操作</th></tr></thead>
             <tbody>
-                {% for rec in records %}
+                {% for record in records %}
                 <tr>
-                    <td>{{ rec.book.title }}</td>
-                    <td>{{ rec.borrow_date.strftime('%Y-%m-%d') }}</td>
-                    <td>{{ rec.due_date.strftime('%Y-%m-%d') }}</td>
-                    <td>{% if rec.status=='borrowed' %}借阅中{% else %}已归还{% endif %}</td>
+                    <td>{{ record.book.title }}</td>
+                    <td>{{ record.book.author }}</td>
+                    <td>{{ record.borrow_date.strftime('%Y-%m-%d') }}</td>
+                    <td class="{% if record.is_overdue() %}text-danger{% endif %}">{{ record.due_date.strftime('%Y-%m-%d') }}{% if record.is_overdue() %} <span class="badge bg-danger">逾期</span>{% endif %}</td>
+                    <td>{% if record.status == 'borrowed' %}<span class="badge bg-warning">借阅中</span>{% else %}<span class="badge bg-secondary">已归还</span>{% endif %}</td>
+                    <td>{{ record.renew_count }}</td>
                     <td>
-                        {% if rec.status=='borrowed' %}
-                            <a href="{{ url_for('return_book', record_id=rec.id) }}" class="btn btn-sm btn-success">归还</a>
-                            <a href="{{ url_for('renew_book', record_id=rec.id) }}" class="btn btn-sm btn-secondary">续借</a>
+                        {% if record.status == 'borrowed' %}
+                            <a href="{{ url_for('return_book', record_id=record.id) }}" class="btn btn-sm btn-success" onclick="return confirm('确认归还？')">归还</a>
+                            <a href="{{ url_for('renew_book', record_id=record.id) }}" class="btn btn-sm btn-secondary" onclick="return confirm('确认续借？')">续借</a>
                         {% endif %}
                     </td>
                 </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-center">暂无借阅记录</td></tr>
                 {% endfor %}
             </tbody>
         </table>
